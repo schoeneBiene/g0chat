@@ -2,6 +2,7 @@ package mainscreen
 
 import (
 	"log"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -106,7 +107,19 @@ func MakeMainScreen() fyne.CanvasObject {
 
     mainContent := container.NewBorder(nil, messageInputForm, nil, nil, messageList);
     content := container.NewHSplit(mainContent, memberList);
-    content.SetOffset(0.9);
-    
+    content.SetOffset(fyne.CurrentApp().Preferences().FloatWithFallback("member_list_split", 0.9));
+
+    go func() {
+        prevOffset := content.Offset;
+
+        for range time.Tick(5 * time.Second) {
+            if(content.Offset != prevOffset) {
+                prevOffset = content.Offset;
+
+                fyne.CurrentApp().Preferences().SetFloat("member_list_split", content.Offset);
+            }
+        }
+    }()
+
     return content;
 }

@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"time"
 
+	"fyne.io/fyne/v2"
 	"github.com/gorilla/websocket"
 
 	MainScreenGui "github.com/schoeneBiene/g0chat/gui/mainscreen"
@@ -88,6 +89,10 @@ type TokenResponse struct {
 }
 
 func requestToken(email, password string) string {
+    if(State.Login_Token != "") {
+        return State.Login_Token;
+    }
+
     requestJson, err := json.Marshal(&TokenRequest{
         Email: email,
         Password: password,
@@ -136,12 +141,15 @@ func sendLogin() {
         }
     } else {
         log.Println("Trying to log in with email and password")
+        token := requestToken(State.Login_Email, State.Login_Password);
+
+        State.Login_Token = token;
 
         msg = &SocketMessage{
             Op: OpLogin,
             D: map[string]interface{}{
                 "anon": false,
-                "token": requestToken(State.Login_Email, State.Login_Password),
+                "token": token,
                 "device": "web",
             },
         }
@@ -155,7 +163,17 @@ func sendLogin() {
 
     log.Println("Sending login payload: ", string(loginJson));
 
-    send(loginJson);
+    err = send(loginJson);
+
+    if err != nil {
+        log.Fatal("Failed to log in: ", err);
+    }
+
+    if(State.Login_Anon) {
+        fyne.CurrentApp().Preferences().SetString("username", State.Login_Username);
+    } else {
+        fyne.CurrentApp().Preferences().SetString("token", State.Login_Token);
+    }
 }
 
 func handleReceiveMessage(socketMsg []byte) {
