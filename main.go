@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+    "flag"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -15,6 +16,13 @@ import (
 )
 
 func main() {
+    flag.BoolFunc("debug-ws", "--debug-ws", func(_ string) error {
+        State.Debug_WS = true;
+        return nil;
+    });
+
+    flag.Parse();
+
 	app := app.NewWithID("me.goodbee.g0chat");
 
     token := app.Preferences().StringWithFallback("token", "");

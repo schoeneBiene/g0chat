@@ -161,7 +161,9 @@ func sendLogin() {
         log.Fatal("Failed to encode login json: ", err);
     }
 
-    log.Println("Sending login payload: ", string(loginJson));
+    if(State.Debug_WS) {
+        log.Println("Sending login payload: ", string(loginJson));
+    }
 
     err = send(loginJson);
 
@@ -234,7 +236,9 @@ func handleMemberList(socketMsg []byte) {
 }
 
 func handleMessage(msg []byte) {
-    log.Printf("Received: %s", msg);
+    if(State.Debug_WS) {
+        log.Printf("Received: %s", msg);
+    }
 
     var decodedMsg SocketMessage;
 
@@ -249,7 +253,9 @@ func handleMessage(msg []byte) {
     }
 
     if(decodedMsg.Op == OpHeartbeat) {
-        log.Println("Sending heartbeat")
+        if(State.Debug_WS) {
+            log.Println("Sending heartbeat")
+        }
 
         res, err := json.Marshal(SocketMessage{
             Op: 2,
@@ -298,7 +304,9 @@ func MakeSocketConnection() {
 	}()
 
     send = func(msg []byte) error {
-        log.Println("Sending: ", string(msg));
+        if(State.Debug_WS) {
+            log.Println("Sending: ", string(msg));
+        }
 
 		return c.WriteMessage(websocket.TextMessage, msg)
 	}

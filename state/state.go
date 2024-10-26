@@ -11,3 +11,5 @@ var Login_Token = ""
 var SendMessage func(content string)
 
 var MainWindow fyne.Window;
+
+var Debug_WS bool;
