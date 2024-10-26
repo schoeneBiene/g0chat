@@ -1,9 +1,13 @@
-package state;
+package state
 
-var Login_Anon bool;
-var Login_Username string;
-var Login_Email string;
-var Login_Password string;
-var Login_Token = "";
+import "fyne.io/fyne/v2"
 
-var SendMessage func (content string);
+var Login_Anon bool
+var Login_Username string
+var Login_Email string
+var Login_Password string
+var Login_Token = ""
+
+var SendMessage func(content string)
+
+var MainWindow fyne.Window;

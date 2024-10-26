@@ -17,7 +17,7 @@ func main() {
     username := app.Preferences().StringWithFallback("username", "");
 
     window := app.NewWindow("G0Chat");
-    
+   
     if(token == "" && username == "") {
         loginContent := container.NewAppTabs(
             container.NewTabItem("Guest", LoginGui.MakeGuestLogin(func(name string) {
@@ -52,6 +52,7 @@ func main() {
         go Socket.MakeSocketConnection();
     }
 
-    window.Resize(fyne.NewSize(640, 460))
+    window.Resize(fyne.NewSize(960, 690))
+    State.MainWindow = window;
     window.ShowAndRun();
 }

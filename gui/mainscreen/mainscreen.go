@@ -6,7 +6,9 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/schoeneBiene/g0chat/gui/settings"
 	"github.com/schoeneBiene/g0chat/gui/widgets"
 
 	State "github.com/schoeneBiene/g0chat/state"
@@ -105,7 +107,18 @@ func MakeMainScreen() fyne.CanvasObject {
         SubmitText: "Send",
     }
 
-    mainContent := container.NewBorder(nil, messageInputForm, nil, nil, messageList);
+    toolbar := widget.NewToolbar(
+        widget.NewToolbarAction(theme.SettingsIcon(), func() {
+            settingsWindow := settings.MakeSettingsWindow();
+
+            settingsWindow.CenterOnScreen();
+            settingsWindow.Resize(fyne.NewSize(640, 460))
+
+            settingsWindow.Show();
+        }),
+    )
+
+    mainContent := container.NewBorder(toolbar, messageInputForm, nil, nil, messageList);
     content := container.NewHSplit(mainContent, memberList);
     content.SetOffset(fyne.CurrentApp().Preferences().FloatWithFallback("member_list_split", 0.9));
 
