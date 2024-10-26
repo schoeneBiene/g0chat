@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	LoginGui "github.com/schoeneBiene/g0chat/gui/login"
-    MainScreenGui "github.com/schoeneBiene/g0chat/gui/mainscreen"
-    Socket "github.com/schoeneBiene/g0chat/ws"
-    State "github.com/schoeneBiene/g0chat/state"
+	MainScreenGui "github.com/schoeneBiene/g0chat/gui/mainscreen"
+	State "github.com/schoeneBiene/g0chat/state"
+	Socket "github.com/schoeneBiene/g0chat/ws"
 )
 
 func main() {
@@ -33,5 +34,6 @@ func main() {
     )
 
     window.SetContent(loginContent);
+    window.Resize(fyne.NewSize(640, 460))
     window.ShowAndRun();
 }
