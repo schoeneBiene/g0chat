@@ -58,12 +58,23 @@ func MakeMainScreen() fyne.CanvasObject {
         },
 
         func() fyne.CanvasObject {
-            return widget.NewLabel("template");
+            return widgets.NewRightclickableLabel("template");
         },
 
         func(lii widget.ListItemID, co fyne.CanvasObject) {
             data := messages[lii];
-            label := co.(*widget.Label);
+            label := co.(*widgets.RightclickableLabel);
+
+            label.OnRightClick = func(pe *fyne.PointEvent) {
+                menu := fyne.NewMenu("", 
+                    fyne.NewMenuItem("Copy Message", func() {
+                        State.MainWindow.Clipboard().SetContent(data.content);
+                    }),
+                );
+
+                popUpMenu := widget.NewPopUpMenu(menu, State.MainWindow.Canvas());
+                popUpMenu.ShowAtPosition(pe.AbsolutePosition);
+            }
             
             label.SetText(fmt.Sprintf("%s%s", func() string {
                 if(data.authorName == "System") {
@@ -85,11 +96,23 @@ func MakeMainScreen() fyne.CanvasObject {
         },
 
         func() fyne.CanvasObject {
-            return widget.NewLabel("template");
+            return widgets.NewRightclickableLabel("template");
         },
 
         func(lii widget.ListItemID, co fyne.CanvasObject) {
-            co.(*widget.Label).SetText(members[lii]);
+            label := co.(*widgets.RightclickableLabel);
+
+            label.SetText(members[lii]);
+            label.OnRightClick = func(pe *fyne.PointEvent) {
+                menu := fyne.NewMenu("",
+                    fyne.NewMenuItem("Copy Name", func() {
+                        State.MainWindow.Clipboard().SetContent(members[lii]);
+                    }),
+                )
+                
+                popUpMenu := widget.NewPopUpMenu(menu, State.MainWindow.Canvas());
+                popUpMenu.ShowAtPosition(pe.AbsolutePosition);
+            }
         },
     );
     memberList.OnSelected = func(_ widget.ListItemID) {
