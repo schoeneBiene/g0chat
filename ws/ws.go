@@ -42,6 +42,7 @@ type ReceiveMessage struct {
             Username string `json:"username"`
             Roles int `json:"roles"`
             Id string `json:"id"`
+            BridgeMetadata map[string]interface{} `json:"bridgeMetadata"`
         } `json:"userInfo"`
         Content string `json:"content"`
         Timestamp int64 `json:"timestamp"`
@@ -58,6 +59,7 @@ type MessageHistory struct {
                 Username string `json:"username"`
                 Roles int `json:"roles"`
                 Id string `json:"id"`
+                BridgeMetadata map[string]interface{} `json:"bridgeMetadata"`
             } `json:"userInfo"`
 
             Content string `json:"content"`
@@ -178,6 +180,20 @@ func sendLogin() {
     }
 }
 
+func getRoleText(role int, bridgeMetadata map[string]interface{}) string {
+    if(len(bridgeMetadata) > 0) {
+        return "BRIDGE";
+    }
+
+    switch r := role; r {
+        case 1: return "GUEST"; 
+        case 2: return "USER";
+        case 6: return "BOT";
+        case 18: return "MOD";
+        default: return "ADMIN";
+    }
+}
+
 func handleReceiveMessage(socketMsg []byte) {
     var decodedMsg *ReceiveMessage = &ReceiveMessage{};
 
@@ -190,7 +206,7 @@ func handleReceiveMessage(socketMsg []byte) {
     data := decodedMsg.D;
     user := data.UserInfo;
 
-    go MainScreenGui.AddMessage(user.Username, user.Id, "USER", data.Content, data.Timestamp);
+    go MainScreenGui.AddMessage(user.Username, user.Id, getRoleText(user.Roles, user.BridgeMetadata), data.Content, data.Timestamp);
 }
 
 func handleMessageHistory(socketMsg []byte) {
@@ -208,7 +224,7 @@ func handleMessageHistory(socketMsg []byte) {
         for _, msg := range history {
             user := msg.UserInfo;
 
-            MainScreenGui.AddMessage(user.Username, user.Id, "USER", msg.Content, msg.Timestamp);
+            MainScreenGui.AddMessage(user.Username, user.Id, getRoleText(user.Roles, user.BridgeMetadata), msg.Content, msg.Timestamp);
         } 
 
         sendLogin();

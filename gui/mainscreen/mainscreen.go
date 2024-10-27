@@ -1,6 +1,7 @@
 package mainscreen
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -63,8 +64,14 @@ func MakeMainScreen() fyne.CanvasObject {
         func(lii widget.ListItemID, co fyne.CanvasObject) {
             data := messages[lii];
             label := co.(*widget.Label);
-
-            label.SetText(data.authorName + ": " + data.content);
+            
+            label.SetText(fmt.Sprintf("%s%s", func() string {
+                if(data.authorName == "System") {
+                    return "";
+                } else {
+                    return fmt.Sprintf("[%s] %s: ", data.authorRole, data.authorName);
+                }
+            }(), data.content));
             messageList.SetItemHeight(lii, label.MinSize().Height)
         },
     )
