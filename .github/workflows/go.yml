@@ -31,13 +31,13 @@ jobs:
       run: |
         fyne-cross \
           windows \
-          -debug -no-cache \
+          -debug -no-cache -app-id me.goodbee.g0chat \
           -name g0chat.exe
           
     - name: Build Linux
       run: |
         fyne-cross \
           linux \
-          -debug -no-cache \
+          -debug -no-cache -app-id me.goodbee.g0chat \
           -name g0chat
       
