@@ -44,3 +44,33 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: /home/runner/work/g0chat/g0chat/fyne-cross/dist/
+  buildMac:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.20'
+
+    - name: Install fyne and fyne-cross
+      run: |
+        go install fyne.io/fyne/v2/cmd/fyne@latest
+        go install github.com/fyne-io/fyne-cross@latest
+
+    - name: Install Podman
+      run: |
+        brew install podman
+        podman machine init
+        podman machine start
+
+    - name: Build Mac
+      run: |
+        fyne-cross \
+        darwin \
+        -debug -no-cache -app-id me.goodbee.g0chat \
+        -name g0chat
+
+        
