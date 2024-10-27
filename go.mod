@@ -1,6 +1,6 @@
 module github.com/schoeneBiene/g0chat
 
-go 1.22.4
+go 1.23.2
 
 require fyne.io/fyne/v2 v2.5.2
 
