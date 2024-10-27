@@ -1,7 +1,9 @@
 package settings
 
 import (
+	"fmt"
 	"image/color"
+	"runtime/debug"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -36,6 +38,23 @@ func MakeSettingsWindow() fyne.Window {
         window.Close();
         state.MainWindow.Close();
     }))
+
+    buildInfo, _ := debug.ReadBuildInfo();
+    var buildCommitHash string;
+    var buildCommitTime string;
+
+    for _, buildSetting := range buildInfo.Settings {
+        if(buildSetting.Key == "vcs.revision") {
+            buildCommitHash = buildSetting.Value;
+        } else if(buildSetting.Key == "vcs.time") {
+            buildCommitTime = buildSetting.Value
+        }
+    }
+
+    buildInfoWidget := widget.NewLabel(
+        fmt.Sprintf("Commit: %s\nCommit Time: %s\nGo Version: %s\n", buildCommitHash, buildCommitTime, buildInfo.GoVersion),
+    );
+    generalTab.Add(buildInfoWidget);
 
     appearanceTab := container.NewVBox();
 
