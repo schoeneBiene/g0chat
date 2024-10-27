@@ -75,6 +75,9 @@ func MakeMainScreen() fyne.CanvasObject {
             messageList.SetItemHeight(lii, label.MinSize().Height)
         },
     )
+    messageList.OnSelected = func(_ widget.ListItemID) {
+        messageList.UnselectAll();
+    }
 
     memberList = widget.NewList(
         func() int {
@@ -89,6 +92,9 @@ func MakeMainScreen() fyne.CanvasObject {
             co.(*widget.Label).SetText(members[lii]);
         },
     );
+    memberList.OnSelected = func(_ widget.ListItemID) {
+        memberList.UnselectAll();
+    }
 
     messageInput := widgets.NewCustomEntry();
     messageInput.MultiLine = true;
